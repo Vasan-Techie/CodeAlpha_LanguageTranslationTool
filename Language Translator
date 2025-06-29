@@ -1,0 +1,68 @@
+from tkinter import *
+from tkinter import ttk
+from googletrans import Translator, LANGUAGES
+import pyttsx3
+
+engine = pyttsx3.init()
+root = Tk()
+root.geometry("500x500")
+root.resizable()
+root.iconbitmap("C:\\Users\\vasan\\Downloads\\TRANSLATORICON.ico")
+root['bg'] = "pink"
+
+root.title("LANGUAGE TRANSLATION TOOL 📝")
+Label(root, text = "Language Translator📝", font="ComicSans 25 italic",background="pink").pack()
+Label(root, text="Enter Text", font= "Timesnewroman 12 italic", background="lightblue",).place(x=60,y=90)
+
+
+Input_text = Entry(root,width=50,background="white",cursor="xterm")
+Input_text.place(x=60,y=120)
+Input_text.get()
+
+Label(root, text="Translation", font="Timesnewroman 12 italic", background="lightblue").place(x=60,y=230)
+Output_text = Text(root,height=10, background="white",wrap= WORD,padx=5,pady=5,width=50)
+Output_text.place(x=60,y=270)
+
+language = list(LANGUAGES.values())
+dest_lang = ttk.Combobox(root, values= language,width=28)
+dest_lang.place(x=60,y=150)
+dest_lang.set("Choose Language")
+
+def Translate():
+    translator = Translator()
+    translated =translator.translate(text=Input_text.get(), dest= dest_lang.get())
+    Output_text.delete(1.0, END)
+    Output_text.insert(END, translated.text)
+
+def Copy():
+    root.clipboard_clear()
+    root.clipboard_append(Output_text.get(1.0,END).strip())
+    root.update()
+
+def Speak():
+    text = Output_text.get(1.0,END).strip()
+    if text:
+        engine.say(text)
+        engine.runAndWait()
+
+def Clear():
+    Input_text.delete(0, END)
+    Output_text.delete(1.0, END)
+
+clear_button = Button(root,text="Clear  X", font="timesnewroman 12 italic",background="red",padx=1,pady=1,command=Clear)
+clear_button.place(x=390,y=100)
+
+
+translate_button = Button(root,height= 1, text="Translate🌐", font="timesnewroman 12 italic", background="violet",padx= 1,pady= 1, command= Translate)
+translate_button.place(x=60,y=180)
+
+
+copy_button = Button(root,text="Copy📝", font="timesnewroman 12 italic", background="lightgreen",padx=1,pady=1,command=Copy)
+copy_button.place(x=390,y=220)
+
+speak_button = Button(root,text="Speak🗣️",font="timesnewroman 12 italic", background="lightyellow",padx=1,pady=1,command=Speak)
+speak_button.place(x=270,y=220)
+
+root.mainloop()
+
+
